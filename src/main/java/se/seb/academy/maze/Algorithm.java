@@ -1,4 +1,4 @@
-package se.seb.academy;
+package se.seb.academy.maze;
 
 public enum Algorithm {
 	ALWAYS_LEFT,

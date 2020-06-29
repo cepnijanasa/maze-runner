@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
+import se.seb.academy.maze.Algorithm;
+import se.seb.academy.maze.SourceConverter;
+
 public class App {
 
 	private static final int API_A = 1;
@@ -33,16 +36,14 @@ public class App {
 	}
 
 	private static Path readMazeFilePathInput(Scanner scanner) {
-		Path path;
-		while (true) {
-			System.out.print("\nPath to maze file:");
-			path = Path.of(scanner.next());
-			if (!Files.exists(path) || Files.isDirectory(path)) {
-				System.out.println("Invalid file path");
-			} else {
-				return path;
-			}
-		}
+		// TODO temporary for testing purposes
+		return Path.of("C:\\Users\\s6812b\\src\\maze\\maze_to_use.csv");
+
+		/*
+		 * Path path; while (true) { System.out.print("\nPath to maze file:"); path =
+		 * Path.of(scanner.next()); if (!Files.exists(path) || Files.isDirectory(path))
+		 * { System.out.println("Invalid file path"); } else { return path; } }
+		 */
 	}
 
 	private static String readAlgoSelectionInput(Scanner scanner) {
@@ -65,18 +66,18 @@ public class App {
 		System.out.println("Welcome to the maze!\n");
 		System.out.println("Available API's:");
 		System.out.println(API_A + ".\n" +
-				"\t Input:\n" + 
-				"\t\t Maze: as two dimentional array.\n" + 
-				"\t\t Algorithm: name of algorithem that will be used.\n" + 
-				"\t Returns:\n" + 
-				"\t\t Fastest navigated path.\n" + 
+				"\t Input:\n" +
+				"\t\t Maze: as two dimentional array.\n" +
+				"\t\t Algorithm: name of algorithem that will be used.\n" +
+				"\t Returns:\n" +
+				"\t\t Fastest navigated path.\n" +
 				"\t\t Name of algorithm used to find the fastest path.\n");
 
 		System.out.println(API_B + ".\n" +
-				"\t Input:\n" + 
-				"\t\t Maze: as two dimentional array.\n" + 
-				"\t Returns:\n" + 
-				"\t\t Fastest navigated path.\n" + 
+				"\t Input:\n" +
+				"\t\t Maze: as two dimentional array.\n" +
+				"\t Returns:\n" +
+				"\t\t Fastest navigated path.\n" +
 				"\t\t Time needed to find the optimal path using all algorithms.\n");
 
 		try (Scanner scanner = new Scanner(System.in)){
@@ -86,7 +87,10 @@ public class App {
 			if (api == API_A) {
 				String algorithm = readAlgoSelectionInput(scanner);
 			}
-			//List<String> lines = Files.readAllLines(pathToMazeFile);
+
+			int[][] result = SourceConverter.toMatrix(Files.readAllLines(pathToMazeFile));
+			SourceConverter.printMatrix(result);
+
 			System.out.println("Bye bye");
 		}
 	}

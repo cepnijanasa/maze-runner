@@ -9,6 +9,7 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 
 import se.seb.academy.maze.Algorithm;
+import se.seb.academy.maze.MatrixPrinter;
 import se.seb.academy.maze.SourceConverter;
 
 public class App {
@@ -89,7 +90,7 @@ public class App {
 			}
 
 			int[][] result = SourceConverter.toMatrix(Files.readAllLines(pathToMazeFile));
-			SourceConverter.printMatrix(result);
+			MatrixPrinter.print(result);
 
 			System.out.println("Bye bye");
 		}

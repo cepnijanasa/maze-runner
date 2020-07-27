@@ -15,4 +15,11 @@ enum BuildingBlock {
 	public int getValue() {
 		return value;
 	}
+
+	public static BuildingBlock of(int i) {
+		for (BuildingBlock b: BuildingBlock.values()) {
+			if (b.getValue() == i) return b;
+		}
+		return null;
+	}
 }

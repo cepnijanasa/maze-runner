@@ -9,7 +9,10 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 
 import se.seb.academy.maze.Algorithm;
+import se.seb.academy.maze.IMazeRunner;
 import se.seb.academy.maze.MatrixPrinter;
+import se.seb.academy.maze.MazeRunnerFactory;
+import se.seb.academy.maze.Position;
 import se.seb.academy.maze.SourceConverter;
 
 public class App {
@@ -47,9 +50,9 @@ public class App {
 		 */
 	}
 
-	private static String readAlgoSelectionInput(Scanner scanner) {
+	private static Algorithm readAlgoSelectionInput(Scanner scanner) {
 		System.out.println("\nAvailable algorithms:");
-		List<String> algorithmList = Arrays.stream(Algorithm.values()).map(a -> a.name()).collect(Collectors.toList());
+		List<String> algorithmList = Arrays.stream(Algorithm.values()).map(a -> a.toString()).collect(Collectors.toList());
 		algorithmList.stream().forEach(a -> System.out.println(a));
 		String choice;
 		while (true) {
@@ -58,7 +61,7 @@ public class App {
 			if (!algorithmList.contains(choice)) {
 				System.out.println("No such algorithm");
 			} else {
-				return choice;
+				return Algorithm.valueOf(choice);
 			}
 		}
 	}
@@ -83,14 +86,21 @@ public class App {
 
 		try (Scanner scanner = new Scanner(System.in)){
 			int api = readApiSelectionInput(scanner);
+
 			Path pathToMazeFile = readMazeFilePathInput(scanner);
+			int[][] matrix = SourceConverter.toMatrix(Files.readAllLines(pathToMazeFile));
 
-			if (api == API_A) {
-				String algorithm = readAlgoSelectionInput(scanner);
-			}
+			Algorithm algorithm = (api == API_A) ? readAlgoSelectionInput(scanner) : Algorithm.getDefault();
+			System.out.println("Using algorithm: " + algorithm.toString());
 
-			int[][] result = SourceConverter.toMatrix(Files.readAllLines(pathToMazeFile));
-			MatrixPrinter.print(result);
+			MatrixPrinter.print(matrix);
+
+			//Maze maze = new Maze(matrix);
+
+			IMazeRunner mazeRunner = MazeRunnerFactory.getMazeRunner(algorithm);
+			List<Position> positionList = mazeRunner.escapeMaze(matrix);
+
+			positionList.stream().forEach(p -> System.out.println(p));
 
 			System.out.println("Bye bye");
 		}

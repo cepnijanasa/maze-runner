@@ -3,6 +3,8 @@ package se.seb.academy;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -90,14 +92,18 @@ public class App {
 			Path pathToMazeFile = readMazeFilePathInput(scanner);
 
 			char[][] charMatrix = SourceConverter.toCharMatrix(Files.readAllLines(pathToMazeFile));
-			MatrixPrinter.print(charMatrix);
+			//MatrixPrinter.print(charMatrix);
 			int[][] matrix = SourceConverter.toIntMatrix(charMatrix);
 
 			Algorithm algorithm = (api == API_A) ? readAlgoSelectionInput(scanner) : Algorithm.getDefault();
 			System.out.println("Using algorithm: " + algorithm.toString());
 
 			IMazeRunner mazeRunner = MazeRunnerFactory.getMazeRunner(algorithm);
+			Instant start = Instant.now();
 			List<Position> positionList = mazeRunner.escapeMaze(matrix);
+			Duration d = Duration.between(start, Instant.now());
+			System.out.println("Time spent: " + d.toMillis() + " ms (" + d.toNanos() + " ns)");
+
 
 			MatrixPrinter.printEscapePath(charMatrix, positionList);
 			positionList.stream().forEach(p -> System.out.println(p));

@@ -72,7 +72,7 @@ public class App {
 		System.out.println(API_A + ".\n" +
 				"\t Input:\n" +
 				"\t\t Maze: as two dimentional array.\n" +
-				"\t\t Algorithm: name of algorithem that will be used.\n" +
+				"\t\t Algorithm: name of algorithm that will be used.\n" +
 				"\t Returns:\n" +
 				"\t\t Fastest navigated path.\n" +
 				"\t\t Name of algorithm used to find the fastest path.\n");

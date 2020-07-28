@@ -6,33 +6,34 @@ public class SourceConverter {
 
 	private SourceConverter() {}
 
-	private static int[] convertRowToMatrix(String source, int wall, int path) {
+	public static char[][] toCharMatrix(List<String> sourceFileRows) {
+		char[][] result = new char[sourceFileRows.size()][];
+		String processed;
 
-		String sourceProcessed = source.replace(",", "")
-				.replace("+--", "+-")
-				.replace("+  ", "+ ")
-				.replace("|  ", "| ")
-				.replace("   ", "  ")
-				.replace("\r", "")
-				.replace("\n", "");
+		for(int i = 0; i < sourceFileRows.size(); i++) {
+			processed = sourceFileRows.get(i).replace(",", "")
+					.replace("+--", "+-")
+					.replace("+  ", "+ ")
+					.replace("|  ", "| ")
+					.replace("   ", "  ")
+					.replace("\r", "")
+					.replace("\n", "");
 
-		System.out.println(sourceProcessed);
-
-		int[] result = new int[sourceProcessed.length()];
-
-		for (int i = 0; i < result.length; i++) {
-			result[i] = (sourceProcessed.charAt(i) == ' ') ? path : wall;
+			result[i] = processed.toCharArray();
 		}
 		return result;
 	}
 
-	public static int[][] toMatrix(List<String> sourceFileRows) {
-		int[][] result = new int[sourceFileRows.size()][];
+	public static int[][] toIntMatrix(char[][] charMatrix) {
+		int[][] result = new int[charMatrix.length][charMatrix[0].length];
 		int path;
 
-		for(int i = 0; i < sourceFileRows.size(); i++) {
-			path = (i == 0) ? BuildingBlock.ENTRY.getValue() : (i == sourceFileRows.size() - 1) ? BuildingBlock.EXIT.getValue() : BuildingBlock.PATH.getValue();
-			result[i] = convertRowToMatrix(sourceFileRows.get(i), BuildingBlock.WALL.getValue(), path);
+		for(int i = 0; i < charMatrix.length; i++) {
+			path = (i == 0) ? BuildingBlock.ENTRY.getValue() : (i == charMatrix.length - 1) ? BuildingBlock.EXIT.getValue() : BuildingBlock.PATH.getValue();
+
+			for (int j = 0; j < charMatrix[i].length; j++) {
+				result[i][j] = (charMatrix[i][j] == ' ') ? path : BuildingBlock.WALL.getValue();
+			}
 		}
 		return result;
 	}

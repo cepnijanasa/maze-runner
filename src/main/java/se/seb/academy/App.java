@@ -88,18 +88,18 @@ public class App {
 			int api = readApiSelectionInput(scanner);
 
 			Path pathToMazeFile = readMazeFilePathInput(scanner);
-			int[][] matrix = SourceConverter.toMatrix(Files.readAllLines(pathToMazeFile));
+
+			char[][] charMatrix = SourceConverter.toCharMatrix(Files.readAllLines(pathToMazeFile));
+			MatrixPrinter.print(charMatrix);
+			int[][] matrix = SourceConverter.toIntMatrix(charMatrix);
 
 			Algorithm algorithm = (api == API_A) ? readAlgoSelectionInput(scanner) : Algorithm.getDefault();
 			System.out.println("Using algorithm: " + algorithm.toString());
 
-			MatrixPrinter.print(matrix);
-
-			//Maze maze = new Maze(matrix);
-
 			IMazeRunner mazeRunner = MazeRunnerFactory.getMazeRunner(algorithm);
 			List<Position> positionList = mazeRunner.escapeMaze(matrix);
 
+			MatrixPrinter.printEscapePath(charMatrix, positionList);
 			positionList.stream().forEach(p -> System.out.println(p));
 
 			System.out.println("Bye bye");

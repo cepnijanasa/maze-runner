@@ -12,10 +12,10 @@ import java.util.stream.Collectors;
 
 import se.seb.academy.maze.Algorithm;
 import se.seb.academy.maze.IMazeRunner;
-import se.seb.academy.maze.MatrixPrinter;
+import se.seb.academy.maze.MazePrinter;
 import se.seb.academy.maze.MazeRunnerFactory;
 import se.seb.academy.maze.Position;
-import se.seb.academy.maze.SourceConverter;
+import se.seb.academy.maze.MazeConverter;
 
 public class App {
 
@@ -91,21 +91,21 @@ public class App {
 
 			Path pathToMazeFile = readMazeFilePathInput(scanner);
 
-			char[][] charMatrix = SourceConverter.toCharMatrix(Files.readAllLines(pathToMazeFile));
+			char[][] charMaze = MazeConverter.toCharMaze(Files.readAllLines(pathToMazeFile));
 			//MatrixPrinter.print(charMatrix);
-			int[][] matrix = SourceConverter.toIntMatrix(charMatrix);
+			int[][] intMaze = MazeConverter.toIntMaze(charMaze);
 
 			Algorithm algorithm = (api == API_A) ? readAlgoSelectionInput(scanner) : Algorithm.getDefault();
 			System.out.println("Using algorithm: " + algorithm.toString());
 
-			IMazeRunner mazeRunner = MazeRunnerFactory.getMazeRunner(algorithm);
+			IMazeRunner mazeRunner = MazeRunnerFactory.newMazeRunner(algorithm);
 			Instant start = Instant.now();
-			List<Position> positionList = mazeRunner.escapeMaze(matrix);
+			List<Position> positionList = mazeRunner.escapeMaze(intMaze);
 			Duration d = Duration.between(start, Instant.now());
 			System.out.println("Time spent: " + d.toMillis() + " ms (" + d.toNanos() + " ns)");
 
 
-			MatrixPrinter.printEscapePath(charMatrix, positionList);
+			MazePrinter.printEscapePath(charMaze, positionList);
 			positionList.stream().forEach(p -> System.out.println(p));
 
 			System.out.println("Bye bye");

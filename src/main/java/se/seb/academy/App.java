@@ -1,21 +1,25 @@
 package se.seb.academy;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.Duration;
-import java.time.Instant;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import se.seb.academy.maze.Algorithm;
 import se.seb.academy.maze.IMazeRunner;
+import se.seb.academy.maze.MazeConverter;
 import se.seb.academy.maze.MazePrinter;
 import se.seb.academy.maze.MazeRunnerFactory;
-import se.seb.academy.maze.Position;
-import se.seb.academy.maze.MazeConverter;
+import se.seb.academy.maze.MazeRunnerResult;
+import se.seb.academy.maze.MazeRunnerTask;
 
 public class App {
 
@@ -68,7 +72,7 @@ public class App {
 		}
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 		System.out.println("Welcome to the maze!\n");
 		System.out.println("Available API's:");
 		System.out.println(API_A + ".\n" +
@@ -95,18 +99,38 @@ public class App {
 			//MatrixPrinter.print(charMatrix);
 			int[][] intMaze = MazeConverter.toIntMaze(charMaze);
 
-			Algorithm algorithm = (api == API_A) ? readAlgoSelectionInput(scanner) : Algorithm.getDefault();
-			System.out.println("Using algorithm: " + algorithm.toString());
+			List<Algorithm> algoList = new ArrayList<>();
+			if (api == API_A) {
+				algoList.add(readAlgoSelectionInput(scanner));
+			} else {
+				algoList.addAll(Arrays.asList(Algorithm.values()));
+			}
 
-			IMazeRunner mazeRunner = MazeRunnerFactory.newMazeRunner(algorithm);
-			Instant start = Instant.now();
-			List<Position> positionList = mazeRunner.escapeMaze(intMaze);
-			Duration d = Duration.between(start, Instant.now());
-			System.out.println("Time spent: " + d.toMillis() + " ms (" + d.toNanos() + " ns)");
+			ExecutorService executor = Executors.newFixedThreadPool(algoList.size());
+			Map<Algorithm, Future<MazeRunnerResult>> futuresMap = new HashMap<>();
 
+			for (Algorithm algo: algoList) {
+				IMazeRunner mazeRunner = MazeRunnerFactory.newMazeRunner(algo);
+				futuresMap.put(algo, executor.submit(new MazeRunnerTask(intMaze, mazeRunner)));
+			}
 
-			MazePrinter.printEscapePath(charMaze, positionList);
-			positionList.stream().forEach(p -> System.out.println(p));
+			MazeRunnerResult optimalResult = null;
+			Algorithm optimalAlgorithm = null;
+			for (Map.Entry<Algorithm, Future<MazeRunnerResult>> entry : futuresMap.entrySet()) {
+				MazeRunnerResult result = entry.getValue().get();
+				if (optimalResult == null || optimalResult.getPositionList().size() > result.getPositionList().size()) {
+					optimalAlgorithm = entry.getKey();
+					optimalResult = result;
+				}
+			}
+			executor.shutdown();
+
+			System.out.println("------------------------------------------------");
+			System.out.println("Using algorithm: " + optimalAlgorithm.toString());
+			System.out.println("Time spent: " + optimalResult.getDuration().toMillis() + " ms (" + optimalResult.getDuration().toNanos() + " ns)");
+			System.out.println("Number of steps performed: " + optimalResult.getPositionList().size());
+			MazePrinter.printEscapePath(charMaze, optimalResult.getPositionList());
+			optimalResult.getPositionList().stream().forEach(System.out::println);
 
 			System.out.println("Bye bye");
 		}

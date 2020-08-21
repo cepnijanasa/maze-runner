@@ -14,10 +14,8 @@ import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 import se.seb.academy.maze.Algorithm;
-import se.seb.academy.maze.IMazeRunner;
 import se.seb.academy.maze.MazeConverter;
 import se.seb.academy.maze.MazePrinter;
-import se.seb.academy.maze.MazeRunnerFactory;
 import se.seb.academy.maze.MazeRunnerResult;
 import se.seb.academy.maze.MazeRunnerTask;
 
@@ -110,8 +108,7 @@ public class App {
 			Map<Algorithm, Future<MazeRunnerResult>> futuresMap = new HashMap<>();
 
 			for (Algorithm algo: algoList) {
-				IMazeRunner mazeRunner = MazeRunnerFactory.newMazeRunner(algo);
-				futuresMap.put(algo, executor.submit(new MazeRunnerTask(intMaze, mazeRunner)));
+				futuresMap.put(algo, executor.submit(new MazeRunnerTask(intMaze, algo.newMazeRunner())));
 			}
 
 			MazeRunnerResult optimalResult = null;

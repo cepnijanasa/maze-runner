@@ -4,7 +4,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -62,7 +62,7 @@ public class App {
 	private static Algorithm readAlgoSelectionInput(Scanner scanner) {
 		System.out.println("\nAvailable algorithms:");
 		List<String> algorithmList = Arrays.stream(Algorithm.values()).map(a -> a.toString()).collect(Collectors.toList());
-		algorithmList.stream().forEach(a -> System.out.println(a));
+		algorithmList.stream().forEach(System.out::println);
 		String choice;
 		while (true) {
 			System.out.print("Enter your choice:");
@@ -110,7 +110,7 @@ public class App {
 			}
 
 			ExecutorService executor = Executors.newFixedThreadPool(algoList.size());
-			Map<Algorithm, Future<MazeRunnerResult>> futuresMap = new HashMap<>();
+			Map<Algorithm, Future<MazeRunnerResult>> futuresMap = new EnumMap<>(Algorithm.class);
 
 			for (Algorithm algo: algoList) {
 				futuresMap.put(algo, executor.submit(new MazeRunnerTask(intMaze, algo.newMazeRunner())));

@@ -31,7 +31,7 @@ public class App {
 		while(true) {
 			System.out.print("\nChoose API:");
 			try {
-				choice = Integer.parseInt(scanner.next());
+				choice = Integer.parseInt(scanner.nextLine());
 				if (!apiList.contains(choice)) {
 					System.out.println("Not a valid selection");
 				} else {
@@ -44,14 +44,19 @@ public class App {
 	}
 
 	private static Path readMazeFilePathInput(Scanner scanner) {
-		// TODO temporary for testing purposes
-		return Path.of("C:\\Users\\s6812b\\src\\maze\\maze_to_use.csv");
+		String defaultPath = "C:\\Users\\s6812b\\src\\maze\\maze_to_use.csv";
 
-		/*
-		 * Path path; while (true) { System.out.print("\nPath to maze file:"); path =
-		 * Path.of(scanner.next()); if (!Files.exists(path) || Files.isDirectory(path))
-		 * { System.out.println("Invalid file path"); } else { return path; } }
-		 */
+		Path path;
+		while (true) {
+			System.out.print("\nPath to maze file (" + defaultPath + " by default):");
+			String input = scanner.nextLine();
+			path = Path.of(input.isBlank() ? defaultPath: input);
+			if (!Files.exists(path) || Files.isDirectory(path)) {
+				System.out.println("Invalid file path");
+			} else {
+				return path;
+			}
+		}
 	}
 
 	private static Algorithm readAlgoSelectionInput(Scanner scanner) {
@@ -61,7 +66,7 @@ public class App {
 		String choice;
 		while (true) {
 			System.out.print("Enter your choice:");
-			choice = scanner.next();
+			choice = scanner.nextLine();
 			if (!algorithmList.contains(choice)) {
 				System.out.println("No such algorithm");
 			} else {

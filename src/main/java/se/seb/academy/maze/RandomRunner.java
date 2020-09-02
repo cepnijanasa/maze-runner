@@ -20,12 +20,12 @@ public class RandomRunner extends AMazeRunner {
 			// if side = 1, then otherSide = 0; if side = 0, then otherSide = 1
 			otherSide = Math.abs(side - 1);
 
-			if (look(maze, position, side) == BuildingBlock.PATH) {
-				position = go(position, side);
+			if (lookToSide(maze, position, side) == BuildingBlock.PATH) {
+				position = goToSide(position, side);
 			} else if (lookForward(maze, position) == BuildingBlock.PATH) {
 				position = goForward(position);
-			} else if (look(maze, position, otherSide) == BuildingBlock.PATH) {
-				position = go(position, otherSide);
+			} else if (lookToSide(maze, position, otherSide) == BuildingBlock.PATH) {
+				position = goToSide(position, otherSide);
 			} else {
 				position = goBackward(position);
 			}
@@ -34,18 +34,17 @@ public class RandomRunner extends AMazeRunner {
 		return positionList;
 	}
 
-	private BuildingBlock look(int[][] maze, Position position, int side) {
+	private BuildingBlock lookToSide(int[][] maze, Position position, int side) {
 		if (side == 0) {
 			return lookLeft(maze, position);
 		}
 		return lookRight(maze, position);
 	}
 
-	private Position go(Position position, int side) {
+	private Position goToSide(Position position, int side) {
 		if (side == 0) {
 			return goLeft(position);
 		}
 		return goRight(position);
 	}
-
 }

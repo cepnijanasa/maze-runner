@@ -6,7 +6,7 @@ import java.util.List;
 public class AlwaysLeftRunner extends AMazeRunner {
 
 	@Override
-	public List<Position> escapeMaze(final int[][] maze) {
+	public List<Position> escapeMaze(int[][] maze) {
 		List<Position> positionList = new ArrayList<>();
 		Position position = getEntry(maze);
 		positionList.add(position);

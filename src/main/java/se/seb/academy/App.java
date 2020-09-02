@@ -44,7 +44,7 @@ public class App {
 	}
 
 	private static Path readMazeFilePathInput(Scanner scanner) {
-		String defaultPath = "C:\\Users\\s6812b\\src\\maze\\maze_to_use.csv";
+		String defaultPath = "C:\\Users\\s6812b\\src\\maze\\maze.csv";
 
 		Path path;
 		while (true) {

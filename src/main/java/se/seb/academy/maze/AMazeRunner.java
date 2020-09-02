@@ -41,23 +41,23 @@ public abstract class AMazeRunner implements IMazeRunner {
 		return BuildingBlock.of(i);
 	}
 
+	protected Position go(Position position, Direction direction) {
+		return new Position(position.getX() + direction.dx * 2, position.getY() + direction.dy * 2, direction);
+	}
+
 	protected Position goLeft(Position position) {
-		Direction direction = position.getDirection();
-		return new Position(position.getX() + direction.left.dx *2, position.getY() + direction.left.dy *2, direction.left);
+		return go(position, position.getDirection().left);
 	}
 
 	protected Position goRight(Position position) {
-		Direction direction = position.getDirection();
-		return new Position(position.getX() + direction.right.dx *2, position.getY() + direction.right.dy *2, direction.right);
+		return go(position, position.getDirection().right);
 	}
 
 	protected Position goForward(Position position) {
-		Direction direction = position.getDirection();
-		return new Position(position.getX() + direction.dx *2, position.getY() + direction.dy *2, direction);
+		return go(position, position.getDirection());
 	}
 
 	protected Position goBackward(Position position) {
-		Direction direction = position.getDirection();
-		return new Position(position.getX() + direction.right.right.dx *2, position.getY() + direction.right.right.dy *2, direction.right.right);
+		return go(position, position.getDirection().right.right);
 	}
 }

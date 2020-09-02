@@ -9,7 +9,6 @@ public class MazeRunnerResult {
 	private Duration duration;
 
 	public MazeRunnerResult(List<Position> positionList, Duration duration) {
-		super();
 		this.positionList = positionList;
 		this.duration = duration;
 	}

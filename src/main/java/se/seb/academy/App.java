@@ -99,7 +99,6 @@ public class App {
 			Path pathToMazeFile = readMazeFilePathInput(scanner);
 
 			char[][] charMaze = MazeConverter.toCharMaze(Files.readAllLines(pathToMazeFile));
-			//MatrixPrinter.print(charMatrix);
 			int[][] intMaze = MazeConverter.toIntMaze(charMaze);
 
 			List<Algorithm> algoList = new ArrayList<>();

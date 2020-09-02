@@ -1,11 +1,6 @@
 package se.seb.academy.maze;
 
-import java.util.List;
-
 public abstract class AMazeRunner implements IMazeRunner {
-
-	@Override
-	public abstract List<Position> escapeMaze(int[][] maze);
 
 	protected Position getEntry(int[][] maze) {
 		int y = 1;

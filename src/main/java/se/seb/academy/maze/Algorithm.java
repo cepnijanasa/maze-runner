@@ -14,9 +14,5 @@ public enum Algorithm {
 		public IMazeRunner newMazeRunner() {return new RandomRunner();}
 	};
 
-	public static Algorithm getDefault() {
-		return ALWAYS_RIGHT;
-	}
-
 	public abstract IMazeRunner newMazeRunner();
 }

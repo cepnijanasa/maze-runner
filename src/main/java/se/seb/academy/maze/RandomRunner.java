@@ -11,7 +11,6 @@ public class RandomRunner extends AMazeRunner {
 		List<Position> positionList = new ArrayList<>();
 		Position position = getEntry(maze);
 		positionList.add(position);
-		int counter = 0;
 		int side, otherSide;
 		Random random = new Random();
 
@@ -31,9 +30,6 @@ public class RandomRunner extends AMazeRunner {
 				position = goBackward(position);
 			}
 			positionList.add(position);
-
-			if (counter++ == 10000)
-				throw new RuntimeException("Something must be wrong, couldn't escape the maze in " + counter + " moves");
 		}
 		return positionList;
 	}

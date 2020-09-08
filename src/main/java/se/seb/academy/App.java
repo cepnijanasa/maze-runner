@@ -1,5 +1,10 @@
 package se.seb.academy;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -44,13 +49,14 @@ public class App {
 	}
 
 	private static Path readMazeFilePathInput(Scanner scanner) {
-		String defaultPath = "C:\\Users\\s6812b\\src\\maze\\maze.csv";
-
-		Path path;
+		Path path = null;
 		while (true) {
-			System.out.print("\nPath to maze file (" + defaultPath + " by default):");
+			System.out.print("\nPath to maze file (leave empty to use embedded maze):");
 			String input = scanner.nextLine();
-			path = Path.of(input.isBlank() ? defaultPath: input);
+			if (input.isBlank()) {
+				return path;
+			}
+			path = Path.of(input);
 			if (!Files.exists(path) || Files.isDirectory(path)) {
 				System.out.println("Invalid file path");
 			} else {
@@ -59,9 +65,16 @@ public class App {
 		}
 	}
 
+	private static List<String> getResourceFileLines(String resourceFile, Charset charset) {
+		InputStream is = App.class.getClassLoader().getResourceAsStream(resourceFile);
+		return new BufferedReader(new InputStreamReader(is, charset)).lines()
+				.collect(Collectors.toList());
+	}
+
 	private static Algorithm readAlgoSelectionInput(Scanner scanner) {
 		System.out.println("\nAvailable algorithms:");
-		List<String> algorithmList = Arrays.stream(Algorithm.values()).map(a -> a.toString()).collect(Collectors.toList());
+		List<String> algorithmList = Arrays.stream(Algorithm.values()).map(Algorithm::toString)
+				.collect(Collectors.toList());
 		algorithmList.stream().forEach(System.out::println);
 		String choice;
 		while (true) {
@@ -98,7 +111,11 @@ public class App {
 
 			Path pathToMazeFile = readMazeFilePathInput(scanner);
 
-			char[][] charMaze = MazeConverter.toCharMaze(Files.readAllLines(pathToMazeFile));
+			List<String> mazeFileLines = (pathToMazeFile == null)
+					? getResourceFileLines("maze.csv", StandardCharsets.UTF_8)
+					: Files.readAllLines(pathToMazeFile);
+
+			char[][] charMaze = MazeConverter.toCharMaze(mazeFileLines);
 			int[][] intMaze = MazeConverter.toIntMaze(charMaze);
 
 			List<Algorithm> algoList = new ArrayList<>();
